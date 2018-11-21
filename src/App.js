@@ -13,7 +13,6 @@ class App extends Component {
           placeholder:'Name'
         },
         value:''
-
       },
       email:{
         elementType:'input',
@@ -22,7 +21,6 @@ class App extends Component {
           placeholder:'Email'
         },
         value:''
-
       },
       mobile:{
         elementType:'input',
@@ -31,11 +29,11 @@ class App extends Component {
           placeholder:'Mobile'
         },
         value:''
-
       },
       department:{
         elementType:'select',
         elementConfig:{
+          placeholder:'Department',
 					options:[
             {
               value:'SDFC',displayValue:'SalesForce'
@@ -43,11 +41,9 @@ class App extends Component {
             {
               value:'MS',displayValue:'Microsoft'
             }
-          ]
-          
+          ]          
         },
         value:''
-
       },
       password:{
         elementType:'input',
@@ -57,10 +53,30 @@ class App extends Component {
         },
         value:''
       }
-    }
-   
+    },
+    loginform:{
+      username:{
+        elementType:'input',
+        elementConfig:{
+					type:'text',
+          placeholder:'Username'
+        },
+        value:''
+      },
+      password:{
+        elementType:'input',
+        elementConfig:{
+					type:'password',
+          placeholder:'Password'
+        },
+        value:''
+      }
+    },
+    isLogedIn:false
 	}
-	
+  
+  
+
 	formChanged=(event,inputIdentifier)=>
 	{
 		const formCopy={...this.state.registerform}
@@ -72,9 +88,24 @@ class App extends Component {
 
 		console.log(inputIdentifier);
 	}
+  logInFormChanged=(event,inputIdentifier)=>
+	{
+		const formCopy={...this.state.loginform}
+		formCopy[inputIdentifier].value=event.target.value;
 
+		this.setState({
+			loginform:formCopy
+		})
+
+		console.log(inputIdentifier);
+  }
+  login=()=>{
+
+  }
   render() {
     const formElements=[];
+    const loginElements=[];
+
     for(let key in this.state.registerform){
       formElements.push(
         {
@@ -82,9 +113,32 @@ class App extends Component {
           config:this.state.registerform[key]
         }
       );
+    }  
+    for(let key in this.state.loginform){
+      loginElements.push(
+        {
+          id:key,
+          config:this.state.loginform[key]
+        }
+      );
     }
-    let source=null;
-    source=(
+    let sourceRegister=null;
+    let sourceLogin=null;
+
+    sourceLogin=(
+      <form>
+					{loginElements.map(element=>(
+						<Input 
+							elementType={element.config.elementType} 
+							elementConfig={element.config.elementConfig} 
+							value={element.config.value}
+							key={element.id}
+							changed={(event)=>{this.logInFormChanged(event,element.id)}}/>
+          ))}
+          <button onClick={this.login}>LogIn</button>
+        </form>
+    );
+    sourceRegister=(
         <form>
 					{formElements.map(element=>(
 						<Input 
@@ -99,10 +153,12 @@ class App extends Component {
 
     return (
       <div className="App">
-        {source}         
+          {sourceLogin}
       </div>
     );
   }
 }
 
 export default App;
+
+
